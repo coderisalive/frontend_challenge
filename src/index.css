@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --calendar-blue: #0084c7;
+  --calendar-gray: #f3f4f6;
+  --calendar-text: #374151;
+  --calendar-border: #e5e7eb;
+}
+
+.dark {
+  --calendar-blue: #3b82f6;
+  --calendar-gray: #121212;
+  --calendar-text: #e5e7eb;
+  --calendar-border: #2d2d2d;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--calendar-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #e5e7eb;
+  background-image:
+    radial-gradient(#d1d5db 1px, transparent 1px),
+    radial-gradient(#d1d5db 1px, #e5e7eb 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  transition: background-color 0.5s ease;
+}
+
+.dark body {
+  background-color: #020617;
+  background-image:
+    radial-gradient(#1e293b 1px, transparent 1px), 
+    radial-gradient(#1e293b 1px, #020617 1px);
+}
+
+/* Mounting Hole & Nail Effect */
+.calendar-hole {
+  width: 16px;
+  height: 16px;
+  background: #111827;
+  border-radius: 50%;
+  box-shadow: 
+    inset 2px 2px 5px rgba(0,0,0,0.9),
+    0 1px 1px rgba(255,255,255,0.1);
+  margin: 10px auto 12px;
+  position: relative;
+  z-index: 30;
+  border: 1px solid rgba(0,0,0,0.4);
+}
+
+.dark .calendar-hole {
+  background: #000;
+  box-shadow: inset 2px 2px 8px rgba(0,0,0,1);
+}
+
+.calendar-nail {
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at 30% 30%, #f3f4f6 0%, #9ca3af 45%, #374151 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  box-shadow: 2px 4px 6px rgba(0,0,0,0.8);
+  border: 0.5px solid rgba(255,255,255,0.3);
+}
+
+.dark .calendar-nail {
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f3f4f6 45%, #d1d5db 100%);
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Silver Pill Ring Effect */
+.silver-pill {
+  width: 14px;
+  height: 32px;
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af, #d1d5db);
+  border-radius: 9999px;
+  box-shadow:
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d1d5db;
+}
+
+.calendar-page-container {
+  box-shadow:
+    -20px 30px 60px -10px rgba(0, 0, 0, 0.2),
+    20px 30px 60px -10px rgba(0, 0, 0, 0.2),
+    0 40px 100px -20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  background-color: white;
+  transition: box-shadow 0.5s ease, background-color 0.5s ease;
+}
+
+.dark .calendar-page-container {
+  box-shadow: 
+    -10px 20px 50px rgba(0, 0, 0, 0.9), 
+    10px 20px 50px rgba(0, 0, 0, 0.9),
+    0 40px 100px rgba(0, 0, 0, 0.8);
+}
+
+/* Custom Selection Styles */
+.date-range-start {
+  @apply bg-blue-600 text-white rounded-l-full;
+}
+
+.date-range-end {
+  @apply bg-blue-600 text-white rounded-r-full;
+}
+
+.date-range-mid {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.date-range-single {
+  @apply bg-blue-600 text-white rounded-full;
+}
+
+/* Custom Scrollbar for Todo List */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #374151;
+}
