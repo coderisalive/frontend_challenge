@@ -2,7 +2,7 @@
 
 A high-fidelity, interactive React application that replicates the "physical" experience of a premium wall-hanging calendar. Designed with a focus on tactile aesthetics, smooth transitions, and productivity features.
 
-![Calendar App Preview](https://frontend-challenge-seven-ruddy.vercel.app/)
+[**🚀 View Live Demo**](https://frontend-challenge-seven-ruddy.vercel.app/)
 
 ## 🌟 Key Features
 
