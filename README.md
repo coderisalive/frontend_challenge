@@ -21,6 +21,7 @@ A high-fidelity, interactive React application that replicates the "physical" ex
 - **Wall-Hanging Context**: Features a realistic metallic mounting hole, a polished nail, and a thick hanging rope for a grounded physical feel.
 - **Grayscale Hover Reveal**: The hero image starts in an elegant black-and-white state, smoothly transitioning to full color as you interact with the calendar.
 - **3D Depth**: Utilizes subtle rotations, custom multi-layered shadows, and the `perspective` property to simulate a manually hung object on a textured plaster wall.
+- **3D Page Flipping**: Navigate months with seamless, continuous 180-degree 3D page flips. The custom silver spiral binder remains immutably anchored in the foreground to simulate a tactile physical calendar.
 
 ### 🌓 Professional Dark Mode
 - **Universal Transformation**: A master toggle (top-right) that transforms both the wall background and the calendar skin simultaneously.
