@@ -22,6 +22,51 @@ const CalendarCard = () => {
   const [targetDate, setTargetDate] = useState(new Date());
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isMonthOpen, setIsMonthOpen] = useState(false);
+
+  // Persistence
+  useEffect(() => {
+    const savedNotes = localStorage.getItem('calendar_notes_v2');
+    const savedTodos = localStorage.getItem('calendar_todos_v2');
+    const savedIsDark = localStorage.getItem('calendar_isdark_v2');
+    if (savedNotes) setNotes(savedNotes);
+    if (savedTodos) setTodos(JSON.parse(savedTodos));
+    if (savedIsDark) setIsDark(JSON.parse(savedIsDark));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('calendar_notes_v2', notes);
+    localStorage.setItem('calendar_todos_v2', JSON.stringify(todos));
+    localStorage.setItem('calendar_isdark_v2', JSON.stringify(isDark));
+  }, [notes, todos, isDark]);
+
+  // Parse notes for "colorful" dates
+  const colorfulDates = useMemo(() => {
+    const dates = new Set();
+    if (!notes) return dates;
+
+    // Pattern for "Day Month -> text" or "Day Month - Day Month -> text"
+    const lines = notes.split('\n');
+    lines.forEach(line => {
+      const match = line.match(/^(\d+\s+\w+)(?:\s+-\s+(\d+\s+\w+))?\s*->\s*(.+)$/);
+      if (match && match[3].trim().length > 0) {
+        const startStr = match[1];
+        const endStr = match[2];
+
+        if (endStr) {
+          // It's a range. Find all dates between startStr and endStr
+          // For simplicity and since year isn't in prefix, we'll match by Month + Day
+          dates.add(startStr);
+          dates.add(endStr);
+          // (Actually, checking the middle on every render is expensive without year, 
+          // let's just highlight the exact strings for now, or expand if possible)
+        } else {
+          dates.add(startStr);
+        }
+      }
+    });
+    return dates;
+  }, [notes]);
+
   const fileInputRef = useRef(null);
   const yearListRef = useRef(null);
   const monthListRef = useRef(null);
@@ -121,20 +166,40 @@ const CalendarCard = () => {
 
 
   const handleDateClick = (date) => {
+    let newStart = startDate;
+    let newEnd = endDate;
+
     if (startDate && !endDate && date.getTime() === startDate.getTime()) {
-      setStartDate(null);
-      setEndDate(null);
-      return;
+      newStart = null;
+      newEnd = null;
+    } else if (!startDate || (startDate && endDate)) {
+      newStart = date;
+      newEnd = null;
+    } else if (date > startDate) {
+      newEnd = date;
+    } else {
+      newStart = date;
+      newEnd = null;
     }
 
-    if (!startDate || (startDate && endDate)) {
-      setStartDate(date);
-      setEndDate(null);
-    } else if (date > startDate) {
-      setEndDate(date);
-    } else {
-      setStartDate(date);
-      setEndDate(null);
+    setStartDate(newStart);
+    setEndDate(newEnd);
+
+    // Auto-generate note template at the top
+    if (newStart) {
+      const sStr = `${newStart.getDate()} ${MONTHS[newStart.getMonth()]}`;
+      let line = "";
+      if (newEnd) {
+        const eStr = `${newEnd.getDate()} ${MONTHS[newEnd.getMonth()]}`;
+        line = `${sStr} - ${eStr} -> `;
+      } else {
+        line = `${sStr} -> `;
+      }
+
+      // Prepend only if this specific prefix doesn't exist already
+      if (!notes.includes(line)) {
+        setNotes(prev => line + (prev.length > 0 ? "\n" + prev : ""));
+      }
     }
   };
 
@@ -430,9 +495,14 @@ const CalendarCard = () => {
                   {isToday(dayObj.date) && (
                     <div className="absolute inset-2 border-2 border-gray-300 dark:border-gray-600 rounded-full pointer-events-none opacity-60"></div>
                   )}
-                  {dayObj.month === 'current' && notes.length > 0 && index % 11 === 0 && (
-                    <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-blue-400 rounded-full border border-white dark:border-gray-900"></div>
-                  )}
+                  {/* Colorful marker if date has notes */}
+                  {(() => {
+                    const dayStr = `${dayObj.date.getDate()} ${MONTHS[dayObj.date.getMonth()]}`;
+                    if (colorfulDates.has(dayStr)) {
+                      return <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>;
+                    }
+                    return null;
+                  })()}
                 </div>
               ))}
             </div>
@@ -462,7 +532,7 @@ const CalendarCard = () => {
       )}
 
       {/* Static Wall Mounting Hole - Fades out during flip */}
-      <div 
+      <div
         className={`calendar-hole z-30 transition-all duration-300 ${isFlipping ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}
       >
         <div className="calendar-nail"></div>

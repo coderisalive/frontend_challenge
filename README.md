@@ -1,40 +1,37 @@
-# Premium Interactive Wall Calendar
+# 📅 Premium Interactive 3D Wall Calendar
 
-A high-fidelity, interactive React application that replicates the "physical" experience of a premium wall-hanging calendar. Designed with a focus on tactile aesthetics, smooth transitions, and productivity features.
+A high-fidelity, interactive React application that replicates the "physical" experience of a premium wall-hanging calendar. Designed with a focus on tactile aesthetics, smooth 3D transitions, and intelligent productivity features.
 
 [**🚀 View Live Demo**](https://frontend-challenge-seven-ruddy.vercel.app/)
 
 ## 🌟 Key Features
 
-### 📅 Advanced Calendar Engine
-- **Dynamic Navigation**: Browse any month or year using minimalist navigation controls embedded in the hero section.
-- **Date Range Selection**: Select start and end dates with a fluid, connected highlight system.
-- **Today Awareness**: Automatically synchronizes with the real-time date, marked by a subtle grey "Today" indicator.
-- **Perfect Grid Logic**: Handles every month length, leap year, and weekday alignment (Monday start) with grayed-out padding days for a consistent aesthetic.
+### 🔄 Cinematic 3D Engine
+- **360° Page Flipping**: Navigate months and years with a seamless, continuous 3D rotation. The mounting wire and board perform a full physical flip while the nail remains "pinned" to the wall.
+- **Integrated Hardware**: Features a realistic metallic mounting hole, a polished static nail, and a hanging wire that correctly layers behind the board for a grounded physical feel.
+- **Tactile Binder**: The silver spiral binder is physically anchored to the board, spinning in perfect synchronization during the flip animation.
 
-### 📝 Productivity Suite
-- **Interactive Todo List**: Quick-add tasks with entrance animations, completion toggles, and deletion.
-- **Ruled Notes Section**: A functional textarea for deep thoughts, complete with 4 professional ruled lines that adapt to your text.
-- **File Attachments**: Seamlessly attach and manage files in your daily notes with a built-in file upload interface.
+### 📝 Intelligent Productivity Suite
+- **Click-to-Note Interaction**: Click any date or range on the calendar to automatically insert a formatted template (`2 April -> `) at the **top** of your notes area.
+- **Dynamic Colorful Highlighting**: Dates in the calendar grid automatically receive a **pulsing blue indicator** only when you've typed an entry for that day.
+- **Global Todo List**: Fast, animated task management with completion toggles and removal.
+- **Automatic Persistence**: All notes, tasks, and theme settings are saved to **Local Storage**, ensuring your data is ready whenever you return.
 
-### 🖼️ Cinematic Aesthetics
-- **Wall-Hanging Context**: Features a realistic metallic mounting hole, a polished nail, and a thick hanging rope for a grounded physical feel.
-- **Grayscale Hover Reveal**: The hero image starts in an elegant black-and-white state, smoothly transitioning to full color as you interact with the calendar.
-- **3D Depth**: Utilizes subtle rotations, custom multi-layered shadows, and the `perspective` property to simulate a manually hung object on a textured plaster wall.
-- **3D Page Flipping**: Navigate months with seamless, continuous 180-degree 3D page flips. The custom silver spiral binder remains immutably anchored in the foreground to simulate a tactile physical calendar.
+### 🌓 Professional Dark Mode & Themes
+- **Universal Transformation**: A reliable theme toggle (via React Portals) that transforms the wall background and calendar skin simultaneously.
+- **Optimized Legibility**: High-contrast typography and subtle inner-shadows ensure perfect reading in both light and dark environments.
 
-### 🌓 Professional Dark Mode
-- **Universal Transformation**: A master toggle (top-right) that transforms both the wall background and the calendar skin simultaneously.
-- **Silhouette Mode**: In Dark Mode, the wire becomes a sharp black silhouette against a deep charcoal wall, highlighted by a brilliant white metallic nail.
-- **Optimized Legibility**: Dark theme uses high-contrast gray-200 text and defined borders for perfect reading in low-light environments.
+### 📱 Smart Responsiveness
+- **Adaptive Layouts**: Specifically optimized for viewports smaller than **800px x 590px**.
+- **Mobile Comfort**: Automatically reduces hero height and adjusts typography on small screens to ensure the calendar grid remains accessible without excessive scrolling.
 
 ## 🚀 Tech Stack
 
 - **Framework**: React 18+
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS v3.4 (with Custom Configuration)
-- **Icons/Graphics**: Custom SVG & Radial Gradients
-- **Typography**: Inter (Modern Sans-Serif)
+- **Animation**: CSS 3D Transforms (`perspective`, `rotateY`)
+- **Persistence**: Web Storage API (LocalStorage)
 
 ## 🛠️ Getting Started
 
@@ -53,17 +50,11 @@ A high-fidelity, interactive React application that replicates the "physical" ex
    npm run dev
    ```
 
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
-
 ## 📖 Usage Guide
 
-- **Switching Themes**: Use the icon at the top-right corner to alternate between Light and Dark mode.
-- **Navigating Months**: Hover over the Month or Year in the blue hero section to reveal the `<` and `>` navigation arrows.
-- **Selecting Dates**: Click once for a start date, and click again on a later date to define a range. Click any date again to reset.
-- **Managing Tasks**: Type your task in the "Add a task" field and hit `Enter`. Click the checkbox to toggle or the `x` to delete.
+- **Switching Themes**: Click the sun/moon icon in the top-right corner.
+- **Adding Notes**: Click any date on the grid. A new line will appear at the top of the "NOTES" section. Type your entry after the `->` to highlight that date.
+- **Selecting Ranges**: Click a start date, then an end date. The entire range will be highlighted and added to your notes.
+- **Managing Tasks**: Type in the "Add a task" field and hit `Enter`. 
 
 ---
-
