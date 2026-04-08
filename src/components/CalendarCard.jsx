@@ -199,13 +199,19 @@ const CalendarCard = () => {
     }
 
     return (
-      <div className="calendar-page-container group overflow-hidden flex flex-col lg:flex-row bg-white dark:bg-[#121212] transform rotate-[0.2deg] relative z-20 border dark:border-gray-800 transition-all duration-500">
+      <div className="calendar-page-container group flex flex-col lg:flex-row bg-white dark:bg-[#121212] transform rotate-[0.2deg] relative z-20 border dark:border-gray-800 transition-all duration-500 rounded-[40px] shadow-2xl">
+        {/* Silver Pill Binder Header - Included inside flipping face */}
+        <div className="flex justify-around px-12 absolute -top-4 left-0 right-0 z-40">
+          {[...Array(14)].map((_, i) => (
+            <div key={i} className="silver-pill" title="Binder Loop"></div>
+          ))}
+        </div>
         {/* Synchronized Perfect Circular Holes */}
         <div className="absolute top-[1.4rem] left-[16%] -translate-x-1/2 w-2 h-2 bg-[#111827] dark:bg-black rounded-full z-30 shadow-inner border border-gray-900"></div>
         <div className="absolute top-[1.4rem] left-[84%] -translate-x-1/2 w-2 h-2 bg-[#111827] dark:bg-black rounded-full z-30 shadow-inner border border-gray-900"></div>
 
         {/* Left/Top Hero Section */}
-        <div className="lg:w-[62%] relative h-80 lg:h-auto min-h-[450px] overflow-hidden">
+        <div className="lg:w-[62%] relative h-80 lg:h-auto min-h-[450px] overflow-hidden rounded-t-[40px] lg:rounded-tr-none lg:rounded-l-[40px]">
           <img
             src={heroImg}
             alt="Mountain Climber"
@@ -327,7 +333,7 @@ const CalendarCard = () => {
         </div>
 
         {/* Right/Bottom Calendar Section */}
-        <div className="lg:w-[38%] p-8 lg:p-12 flex flex-col justify-between bg-white dark:bg-[#121212] border-l border-gray-50 dark:border-gray-800 transition-colors duration-500">
+        <div className="lg:w-[38%] p-8 lg:p-12 flex flex-col justify-between bg-white dark:bg-[#121212] border-l border-gray-50 dark:border-gray-800 transition-colors duration-500 rounded-b-[40px] lg:rounded-bl-none lg:rounded-r-[40px]">
           <div className="mb-6">
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-[12px] font-black text-gray-900 dark:text-gray-100 tracking-[0.2em]">NOTES</h3>
@@ -455,14 +461,16 @@ const CalendarCard = () => {
         document.body
       )}
 
-      {/* Wall Mounting Hole */}
-      <div className="calendar-hole z-30">
+      {/* Static Wall Mounting Hole - Fades out during flip */}
+      <div 
+        className={`calendar-hole z-30 transition-all duration-300 ${isFlipping ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}
+      >
         <div className="calendar-nail"></div>
       </div>
 
-      {/* Hanging Strings */}
+      {/* Hanging Strings - Fades out during flip */}
       <svg
-        className="absolute top-[2px] left-0 w-full h-[105px] pointer-events-none z-10"
+        className={`absolute top-[2px] left-0 w-full h-[105px] pointer-events-none z-10 transition-all duration-500 ${isFlipping ? 'opacity-0 translate-y-[-10px]' : 'opacity-100 translate-y-0'}`}
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
@@ -476,14 +484,7 @@ const CalendarCard = () => {
         />
       </svg>
 
-      <div className="w-full relative">
-        {/* Silver Pill Binder Header */}
-        <div className="flex justify-around px-12 mb-[-16px] relative z-40 pointer-events-none">
-          {[...Array(14)].map((_, i) => (
-            <div key={i} className="silver-pill" title="Binder Loop"></div>
-          ))}
-        </div>
-
+      <div className="w-full relative mt-6 px-4 lg:px-0">
         <div className="calendar-container-3d relative z-20">
           <div className="calendar-inner" style={{ transform: `rotateY(${rotation}deg)` }}>
             <div className="face face-front">
