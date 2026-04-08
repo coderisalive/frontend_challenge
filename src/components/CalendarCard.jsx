@@ -20,7 +20,33 @@ const CalendarCard = () => {
   const [isFlipping, setIsFlipping] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [targetDate, setTargetDate] = useState(new Date());
+  const [isYearOpen, setIsYearOpen] = useState(false);
+  const [isMonthOpen, setIsMonthOpen] = useState(false);
   const fileInputRef = useRef(null);
+  const yearListRef = useRef(null);
+  const monthListRef = useRef(null);
+
+  useEffect(() => {
+    if (isYearOpen && yearListRef.current) {
+      const activeEl = yearListRef.current.querySelector('.active-year');
+      if (activeEl) {
+        setTimeout(() => {
+          yearListRef.current.scrollTop = activeEl.offsetTop - (yearListRef.current.offsetHeight / 2) + (activeEl.offsetHeight / 2);
+        }, 10);
+      }
+    }
+  }, [isYearOpen]);
+
+  useEffect(() => {
+    if (isMonthOpen && monthListRef.current) {
+      const activeEl = monthListRef.current.querySelector('.active-month');
+      if (activeEl) {
+        setTimeout(() => {
+          monthListRef.current.scrollTop = activeEl.offsetTop - (monthListRef.current.offsetHeight / 2) + (activeEl.offsetHeight / 2);
+        }, 10);
+      }
+    }
+  }, [isMonthOpen]);
 
   const isToday = (date) => {
     const today = new Date();
@@ -95,6 +121,12 @@ const CalendarCard = () => {
 
 
   const handleDateClick = (date) => {
+    if (startDate && !endDate && date.getTime() === startDate.getTime()) {
+      setStartDate(null);
+      setEndDate(null);
+      return;
+    }
+
     if (!startDate || (startDate && endDate)) {
       setStartDate(date);
       setEndDate(null);
@@ -179,11 +211,12 @@ const CalendarCard = () => {
             alt="Mountain Climber"
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out dark:opacity-60"
           />
-          <div
-            className="absolute bottom-0 right-0 left-0 h-1/2 bg-blue-600/95 dark:bg-blue-900/80 text-white p-8 flex flex-col justify-end items-end transition-colors duration-500"
-            style={{ clipPath: 'polygon(0 85%, 100% 25%, 100% 100%, 0% 100%)' }}
-          >
-            <div className="text-right flex flex-col items-end">
+          <div className="absolute bottom-0 right-0 left-0 h-1/2 text-white p-8 flex flex-col justify-end items-end">
+            <div
+              className="absolute inset-0 bg-blue-600/95 dark:bg-blue-900/80 transition-colors duration-500"
+              style={{ clipPath: 'polygon(0 85%, 100% 25%, 100% 100%, 0% 100%)' }}
+            ></div>
+            <div className="text-right flex flex-col items-end relative z-10 w-full">
               {/* Year Navigation */}
               <div className="flex items-center gap-4 mb-2 group">
                 <button
@@ -193,7 +226,41 @@ const CalendarCard = () => {
                 >
                   &lt;
                 </button>
-                <p className="text-xl font-bold tracking-tight opacity-70 mb-0">{date.getFullYear()}</p>
+                <div className="relative z-50">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isFlipping) setIsYearOpen(!isYearOpen);
+                      setIsMonthOpen(false);
+                    }}
+                    className={`text-xl font-bold tracking-tight opacity-70 mb-0 cursor-pointer hover:opacity-100 transition-opacity ${isFlipping ? 'cursor-not-allowed' : ''}`}
+                  >
+                    {date.getFullYear()}
+                  </div>
+
+                  {isYearOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40 cursor-default" onClick={(e) => { e.stopPropagation(); setIsYearOpen(false); }}></div>
+                      <div ref={yearListRef} className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-24 max-h-48 overflow-y-auto bg-white/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 custom-scrollbar py-2 text-center scale-100 transition-all origin-bottom text-gray-900 border-b-4 border-b-blue-600 dark:border-b-blue-500">
+                        {Array.from({ length: 41 }, (_, i) => date.getFullYear() - 20 + i).map(year => (
+                          <div
+                            key={year}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsYearOpen(false);
+                              if (year === date.getFullYear()) return;
+                              const newDate = new Date(year, date.getMonth(), 1);
+                              triggerFlip(newDate, year > date.getFullYear() ? 1 : -1);
+                            }}
+                            className={`py-2 text-base font-bold cursor-pointer hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-colors ${year === date.getFullYear() ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-gray-800 active-year' : 'text-gray-700 dark:text-gray-200'}`}
+                          >
+                            {year}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); changeYear(1, date); }}
                   disabled={isFlipping}
@@ -212,9 +279,41 @@ const CalendarCard = () => {
                 >
                   &lt;
                 </button>
-                <h2 className="text-4xl lg:text-6xl font-black uppercase tracking-tighter leading-none">
-                  {MONTHS[date.getMonth()]}
-                </h2>
+                <div className="relative z-50">
+                  <h2
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isFlipping) setIsMonthOpen(!isMonthOpen);
+                      setIsYearOpen(false);
+                    }}
+                    className={`text-4xl lg:text-6xl font-black uppercase tracking-tighter leading-none cursor-pointer hover:opacity-80 transition-opacity ${isFlipping ? 'cursor-not-allowed opacity-50' : ''}`}
+                  >
+                    {MONTHS[date.getMonth()]}
+                  </h2>
+
+                  {isMonthOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40 cursor-default" onClick={(e) => { e.stopPropagation(); setIsMonthOpen(false); }}></div>
+                      <div ref={monthListRef} className="absolute bottom-full right-0 mb-4 w-48 max-h-60 overflow-y-auto bg-white/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 custom-scrollbar py-3 text-center scale-100 transition-all origin-bottom-right border-b-4 border-b-blue-600 dark:border-b-blue-500">
+                        {MONTHS.map((month, index) => (
+                          <div
+                            key={month}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsMonthOpen(false);
+                              if (index === date.getMonth()) return;
+                              const newDate = new Date(date.getFullYear(), index, 1);
+                              triggerFlip(newDate, index > date.getMonth() ? 1 : -1);
+                            }}
+                            className={`py-2 text-lg font-bold uppercase tracking-wider cursor-pointer hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-colors ${index === date.getMonth() ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-gray-800 active-month' : 'text-gray-700 dark:text-gray-300'}`}
+                          >
+                            {month}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); changeMonth(1, date); }}
                   disabled={isFlipping}
