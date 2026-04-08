@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import heroImg from '../assets/hero-calendar.png';
 
 const DAYS_OF_WEEK = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -230,7 +231,7 @@ const CalendarCard = () => {
         <div className="lg:w-[38%] p-8 lg:p-12 flex flex-col justify-between bg-white dark:bg-[#121212] border-l border-gray-50 dark:border-gray-800 transition-colors duration-500">
           <div className="mb-6">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-[12px] font-black text-gray-600 dark:text-gray-300 tracking-[0.2em]">NOTES</h3>
+              <h3 className="text-[12px] font-black text-gray-900 dark:text-gray-100 tracking-[0.2em]">NOTES</h3>
               <button
                 onClick={() => fileInputRef.current.click()}
                 className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
@@ -244,13 +245,13 @@ const CalendarCard = () => {
             </div>
             <div className="relative group">
               <textarea
-                className="w-full h-32 p-0 bg-transparent border-none focus:ring-0 outline-none resize-none text-sm leading-8 font-medium text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 relative z-10"
+                className="w-full h-32 p-0 bg-transparent border-none focus:ring-0 outline-none resize-none text-sm leading-8 font-medium text-gray-800 dark:text-white placeholder-gray-600 dark:placeholder-gray-300 relative z-10"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
               <div className="absolute inset-0 pt-1 pointer-events-none">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="border-b border-gray-200 dark:border-gray-700 h-8"></div>
+                  <div key={i} className="border-b border-gray-400 dark:border-white h-8"></div>
                 ))}
               </div>
             </div>
@@ -275,10 +276,10 @@ const CalendarCard = () => {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[12px] font-black text-gray-600 dark:text-gray-300 mb-4 tracking-[0.2em]">TODO LIST</h3>
+            <h3 className="text-[12px] font-black text-gray-900 dark:text-gray-100 mb-4 tracking-[0.2em]">TODO LIST</h3>
             <input
               type="text"
-              className="w-full bg-transparent border-b border-gray-200 dark:border-gray-700 pb-2 mb-4 outline-none text-sm placeholder-gray-400 dark:placeholder-gray-500 font-medium focus:border-blue-300 dark:focus:border-blue-500 text-gray-800 dark:text-gray-200 transition-colors"
+              className="w-full bg-transparent border-b border-gray-400 dark:border-white pb-2 mb-4 outline-none text-sm placeholder-gray-600 dark:placeholder-gray-300 font-medium focus:border-blue-400 dark:focus:border-blue-500 text-gray-900 dark:text-white transition-colors"
               placeholder="Add a task + Enter"
               value={newTodo}
               onChange={(e) => setNewTodo(e.target.value)}
@@ -296,14 +297,14 @@ const CalendarCard = () => {
                   </button>
                 </div>
               ))}
-              {todos.length === 0 && <p className="text-[12px] text-gray-400 dark:text-gray-500 italic">No tasks for today...</p>}
+              {todos.length === 0 && <p className="text-[12px] text-gray-500 dark:text-gray-300 font-medium italic">No tasks for today...</p>}
             </div>
           </div>
 
           <div>
             <div className="grid grid-cols-7 mb-4">
               {DAYS_OF_WEEK.map((day, i) => (
-                <div key={day} className={`text-[11px] font-black tracking-widest text-center ${i >= 5 ? 'text-blue-500 dark:text-blue-600' : 'text-gray-600 dark:text-gray-600'}`}>{day}</div>
+                <div key={day} className={`text-[11px] font-black tracking-widest text-center ${i >= 5 ? 'text-blue-500 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}>{day}</div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
@@ -313,8 +314,8 @@ const CalendarCard = () => {
                   onClick={() => handleDateClick(dayObj.date)}
                   className={`
                       relative py-3 flex items-center justify-center text-[13px] font-bold cursor-pointer transition-all duration-300 rounded-lg
-                      ${dayObj.month === 'current' ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-800'}
-                      ${isWeekend(index) && dayObj.month === 'current' && !startDate ? 'text-blue-500 dark:text-blue-700' : ''}
+                      ${dayObj.month === 'current' ? 'text-gray-800 dark:text-white' : 'text-gray-300 dark:text-gray-600'}
+                      ${isWeekend(index) && dayObj.month === 'current' && !startDate ? 'text-blue-500 dark:text-blue-400' : ''}
                       ${getSelectionClass(dayObj.date)}
                       ${isToday(dayObj.date) && !getSelectionClass(dayObj.date) ? 'bg-gray-200 dark:bg-gray-800' : ''}
                       hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:shadow-md hover:scale-110 z-10
@@ -339,18 +340,21 @@ const CalendarCard = () => {
   return (
     <div className="max-w-6xl mx-auto my-12 p-4 bg-transparent flex flex-col items-center relative select-none transition-colors duration-500">
 
-      {/* Theme Toggle Button */}
-      <button
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700"
-        title={isDark ? "Switch to Normal Mode" : "Switch to Dark Mode"}
-      >
-        {isDark ? (
-          <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" /></svg>
-        ) : (
-          <svg className="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
-        )}
-      </button>
+      {/* Theme Toggle Button via Portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <button
+          onClick={() => setIsDark(!isDark)}
+          className="fixed top-6 right-6 z-[9999] p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700"
+          title={isDark ? "Switch to Normal Mode" : "Switch to Dark Mode"}
+        >
+          {isDark ? (
+            <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" /></svg>
+          ) : (
+            <svg className="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+          )}
+        </button>,
+        document.body
+      )}
 
       {/* Wall Mounting Hole */}
       <div className="calendar-hole z-30">
